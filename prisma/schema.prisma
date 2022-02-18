@@ -1,11 +1,68 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Permet de définir l'engine que prisma va exécuter, ici on dit à prisma que ce sera pour du JS.
+// cf : https://www.prisma.io/docs/concepts/components/prisma-schema/generators
+
 generator client {
   provider = "prisma-client-js"
 }
 
+// Si on veut utiliser Prisma avec Mongodb on doit spécifier :
+
+// provider : Le type de database que l'on va utiliser
+// url : Url vers la db.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// On va définir les models/nos entités comme on ferait dans une DB (table, clé ...)
+// On défini 2 tables "User" et "Post"
+
+// nom      Type       Contraintes
+
+// Contraintes : @relation() = foreign key.
+
+
+
+
+// un Post dans notre bdd :
+
+// - id : int (primary key)
+// - titre : string
+// - contenu du post : string (optionnel souligné par le "?")
+// - le poste-a-t-il était publié ? : Boolean
+// - auteur du post: foreign key vers 1 User. (optionnel)
+// - l'id de l'auteur. (optionnel)
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+  // Relation entre User --> Post (1:N)
+  author    User?   @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+// Utilisateur dans notre base de donnée :
+
+// - id User: Primary key
+// - name : nom de l'user (optionnel)
+// - email : String (optionnel)
+// - createdAt: Date type qui a une valeur par défaut auxquels on attache la string created_at
+// - updated_at: Date, modif de la valeur.
+// - posts : Un Utilisateur peut avoir plusieurs Post !!!
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String?  @unique
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  posts     Post[] // Défini le contenu comme une liste de Post. ([])
+
+  // défini pour prisma le model "users" qui fait référence à la table "User"
+  @@map(name: "users")
 }
