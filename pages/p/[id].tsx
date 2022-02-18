@@ -3,18 +3,22 @@ import { GetServerSideProps } from "next"
 import ReactMarkdown from "react-markdown"
 import Layout from "../../components/Layout"
 import { PostProps } from "../../components/Post"
+import prisma from "../../lib/prisma"
 
+// Route Dynamic.
+
+// SSR
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const post = {
-    id: 1,
-    title: "Prisma is the perfect ORM for Next.js",
-    content: "[Prisma](https://github.com/prisma/prisma) and Next.js go _great_ together!",
-    published: false,
-    author: {
-      name: "Nikolas Burk",
-      email: "burk@prisma.io",
+  const post = await prisma.post.findUnique({ // On va cherche le tuple qui correspond à l'id que l'on cherche.
+    where: {
+      id: Number(params?.id) || -1,
     },
-  }
+    include: { // Comme dans index.ts on demande à récupérer le nom de l'utilisateur qui correspond à notre query.
+      author: {
+        select: {name: true}
+      } 
+    }
+  })
   return {
     props: post,
   }
