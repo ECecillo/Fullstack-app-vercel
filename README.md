@@ -5,3 +5,16 @@ This is the starter project for the fullstack tutorial with Next.js and Prisma. 
 Link of Documentation followed : 
 
 https://vercel.com/guides/nextjs-prisma-postgres
+
+
+### Create the table in the database 
+
+`npx prisma db push`
+
+### Access prisma CLI Table 
+
+`npx prisma studio`
+
+### Generate Prisma schema in db
+
+`npx prisma generate`
