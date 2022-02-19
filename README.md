@@ -18,3 +18,9 @@ https://vercel.com/guides/nextjs-prisma-postgres
 ### Generate Prisma schema in db
 
 `npx prisma generate`
+
+### Précisions sur le dossier `/pages/api`
+
+Pour chaque dossier que l'on créer c'est un handler que l'on doit gérer.
+
+Ce handler s'occupe de faire le Back-end entre notre app et notre bdd.
