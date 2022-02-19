@@ -44,7 +44,7 @@ const Post: React.FC<PostProps> = (props) => {
   const userHasValidSession = Boolean(session);
   const postBelongsToUser = session?.user?.email === props.author?.email;
 
-  console.log(props);
+  console.log(props); 
 
   let title = props.title
   if (!props.published) {
