@@ -1,8 +1,10 @@
 import React from "react"
 import { GetServerSideProps } from "next"
 import ReactMarkdown from "react-markdown"
+import Router from "next/router"
 import Layout from "../../components/Layout"
 import { PostProps } from "../../components/Post"
+import { useSession } from "next-auth/react"
 import prisma from "../../lib/prisma"
 
 // Route Dynamic.
@@ -15,8 +17,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     },
     include: { // Comme dans index.ts on demande à récupérer le nom de l'utilisateur qui correspond à notre query.
       author: {
-        select: {name: true}
-      } 
+        select: { name: true, email: true }
+      }
     }
   })
   return {
@@ -24,7 +26,26 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 }
 
+// Fonction async qu'on va utiliser pour le bouton publier.
+async function publishPost(id: number): Promise<void> {
+  await fetch(`/api/publish/${id}`, {
+    method: 'PUT',
+  });
+  await Router.push('/');
+}
+
+// Affiche les détails du Post surlequel on a cliqué 🙂 
 const Post: React.FC<PostProps> = (props) => {
+  // Récupère les infos de l'user.
+  const { data: session, status } = useSession();
+  if (status === 'loading') {
+    return <div>Authenticating ...</div>;
+  }
+  const userHasValidSession = Boolean(session);
+  const postBelongsToUser = session?.user?.email === props.author?.email;
+
+  console.log(props);
+
   let title = props.title
   if (!props.published) {
     title = `${title} (Draft)`
@@ -36,10 +57,16 @@ const Post: React.FC<PostProps> = (props) => {
         <h2>{title}</h2>
         <p>By {props?.author?.name || "Unknown author"}</p>
         <ReactMarkdown children={props.content} />
+        {/* 
+          Si on a un Post pas publié et que l'utilisateur est bien connecté et que que le Post appartient à l'utilisateur on affiche le bouton publié. 
+        */}
+        {!props.published && userHasValidSession && postBelongsToUser && (
+          <button onClick={() => publishPost(props.id)}>Publish</button>
+        )}
       </div>
       <style jsx>{`
         .page {
-          background: white;
+          background: var(--geist-background);
           padding: 2rem;
         }
 

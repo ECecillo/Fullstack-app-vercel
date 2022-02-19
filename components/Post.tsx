@@ -13,6 +13,7 @@ export type PostProps = {
   published: boolean;
 };
 
+// Dans props on a toutes les infos de ce dernier (author.name, author.email ...)
 const Post: React.FC<{ post: PostProps }> = ({ post }) => {
   const authorName = post.author ? post.author.name : "Unknown author";
   return (

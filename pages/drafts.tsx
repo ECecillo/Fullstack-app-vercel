@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         include: {
             // On va également demandé à récupérer le nom de l'utilisateur.
             author: {
-                select: { name: true },
+                select: { name: true, email: true },
             },
         },
     });
@@ -40,7 +40,6 @@ type Props = {
 
 const Drafts: React.FC<Props> = (props) => {
     const { data: session } = useSession();
-
     if (!session) {
         return (
             <Layout>
