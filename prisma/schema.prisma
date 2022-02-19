@@ -24,9 +24,6 @@ datasource db {
 
 // Contraintes : @relation() = foreign key.
 
-
-
-
 // un Post dans notre bdd :
 
 // - id : int (primary key)
@@ -51,6 +48,8 @@ model Post {
 // - id User: Primary key
 // - name : nom de l'user (optionnel)
 // - email : String (optionnel)
+// - emailVerified : Date (optionnel)
+// - image : chemin vers la photo de profile Utilisateur (optionnel).
 // - createdAt: Date type qui a une valeur par défaut auxquels on attache la string created_at
 // - updated_at: Date, modif de la valeur.
 // - posts : Un Utilisateur peut avoir plusieurs Post !!!
@@ -59,10 +58,77 @@ model User {
   id        Int      @id @default(autoincrement())
   name      String?
   email     String?  @unique
+  emailVerified DateTime?
+  image         String?
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
   posts     Post[] // Défini le contenu comme une liste de Post. ([])
 
   // défini pour prisma le model "users" qui fait référence à la table "User"
+  Account Account[]
+  Session Session[]
   @@map(name: "users")
+}
+
+// Les tables nécessaires pour NextAuth :
+// https://next-auth.js.org/adapters/models
+
+
+// ===== Account ======
+// Fourni les informations à OAuth associé aux Users. (contient surtout les infos pour un TokenSet)
+
+
+// id  :  Primary key 
+// type : 
+// provider :
+// providerAccountId :
+// refreshToken :
+// accessToken :
+// expiresAt : Temps en seconde pour l'expiration du token.
+// tokenType :
+// scope :
+// idToken :
+// sessionState :
+// oauthTokenSecret :
+// oauthToken :
+
+// user   User @relation(fields: [userId], references: [id], onDelete: Cascade) : 1 utilisateur peut avoir plusieurs compte mais 1 compte a 1 seul User.
+// userId Int
+
+model Account {
+  id                Int     @id @default(autoincrement())
+  type              String
+  provider          String
+  providerAccountId String
+  refreshToken      String? @map("refresh_token")
+  accessToken       String? @map("access_token")
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type")
+  scope             String?
+  idToken           String?
+  sessionState      String? @map("session_state")
+  oauthTokenSecret  String? @map("oauth_token_secret")
+  oauthToken        String? @map("oauth_token")
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  userId Int
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         Int      @id @default(autoincrement())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
