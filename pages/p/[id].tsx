@@ -34,6 +34,13 @@ async function publishPost(id: number): Promise<void> {
   await Router.push('/');
 }
 
+async function deletePost(id: number): Promise<void> {
+  await fetch(`/api/post/${id}`, {
+    method: 'DELETE',
+  });
+  Router.push('/');
+}
+
 // Affiche les détails du Post surlequel on a cliqué 🙂 
 const Post: React.FC<PostProps> = (props) => {
   // Récupère les infos de l'user.
@@ -43,8 +50,6 @@ const Post: React.FC<PostProps> = (props) => {
   }
   const userHasValidSession = Boolean(session);
   const postBelongsToUser = session?.user?.email === props.author?.email;
-
-  console.log(props); 
 
   let title = props.title
   if (!props.published) {
@@ -62,6 +67,10 @@ const Post: React.FC<PostProps> = (props) => {
         */}
         {!props.published && userHasValidSession && postBelongsToUser && (
           <button onClick={() => publishPost(props.id)}>Publish</button>
+        )}
+        {
+          userHasValidSession && postBelongsToUser && (
+            <button onClick={() => deletePost(props.id)}>Delete</button>
         )}
       </div>
       <style jsx>{`
