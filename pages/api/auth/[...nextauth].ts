@@ -1,9 +1,10 @@
-/* // Configuration de la liaison entre Github et NextAuth en utilisant les .env
+// Configuration de la liaison entre Github et NextAuth en utilisant les .env
 import { NextApiHandler } from 'next';
 import NextAuth from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import GitHubProvider from 'next-auth/providers/github';
 import prisma from '../../../lib/prisma';
+
 
 // NextJS va utiliser ce Handler pour passer les credentials via la requête et NextAuth s'occupera de l'authentification.
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
@@ -20,25 +21,5 @@ const options = {
     }),
   ],
   adapter: PrismaAdapter(prisma), // Sert à faire persister le les données de connexion.
-};
- */
-
-import { NextApiHandler } from 'next';
-import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import GitHubProvider from 'next-auth/providers/github';
-import prisma from '../../../lib/prisma';
-
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
-export default authHandler;
-
-const options = {
-  providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-  ],
-  adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
 };
