@@ -1,5 +1,5 @@
 import React from "react"
-import { GetStaticProps } from "next"
+import { GetServerSideProps } from "next"
 import Layout from "../components/Layout"
 import Post, { PostProps } from "../components/Post"
 import prisma from "../lib/prisma"
@@ -7,7 +7,7 @@ import prisma from "../lib/prisma"
 
 // prisma : Instance qui va être notre interface entre la db et notre app (Principe d'un ORM).
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const feed = await prisma.post.findMany({ // On va faire une sorte de select dans la database qui va nous return : 
     where : {published : true}, // On cherche les postes qui ont le bool published = true.
     // On va également demandé à récupérer le nom de l'auteur des props et sera inclus dans la réponse.
