@@ -1,26 +1,45 @@
-# Fullstack Authentication Example with Next.js and NextAuth.js
+# Lien vers la demo
+---
+https://ececillo-blogr-nextjs-prisma.vercel.app/
 
-This is the starter project for the fullstack tutorial with Next.js and Prisma. You can find the final version of this project in the [`final`](https://github.com/prisma/blogr-nextjs-prisma/tree/final) branch of this repo.
-
-Link of Documentation followed : 
-
+## Lien vers la doc qui explique les étapes de création et le Code Source : 
+---
 https://vercel.com/guides/nextjs-prisma-postgres
 
-
-### Create the table in the database 
-
-`npx prisma db push`
-
-### Access prisma CLI Table 
-
-`npx prisma studio`
-
-### Generate Prisma schema in db
-
-`npx prisma generate`
+# Arborescence
+---
+| Dossiers  | Description  |
+|---|---|
+| components/  | Tous les composants que l'on utilise pour notre site   |
+|  lib/ | Contient le fichier qui créer l'objet PrismaClient nous permettant de faire des requêtes à la BDD   |
+| pages/  | Toutes les pages que NextJS utilise pour faire le Routage Dynamique et les pages d'API |
+| prisma/  | Contient le shéma de notre BDD en Postgresql   |
 
 ### Précisions sur le dossier `/pages/api`
 
-Pour chaque dossier que l'on créer c'est un handler que l'on doit gérer.
+- Pour chaque dossier que l'on créer c'est un handler que l'on doit gérer.
 
-Ce handler s'occupe de faire le Back-end entre notre app et notre bdd.
+- Ces handlers s'occupent de faire le Back-end, entre notre app et notre bdd.
+
+## Prisma
+---
+### Créer les tables que l'on met dans le fichier `schema.prisma`
+
+`npx prisma db push`
+
+### Permet d'accèder au Panneau de Controle de Prisma
+
+`npx prisma studio`
+
+### Génère le `PrismaCLient` dans `lib/prisma.ts` que l'on utilise pour faire les appels à la bdd.
+
+`npx prisma generate`
+
+## Remarque
+---
+
+  Dans la demo, les opérations sur la BDD prennent beaucoup de temps car le serveur qui host le site (vercel) est aux US et la BDD est en Europe, on a un délai de 3s.
+  
+  La base de donnée est créer et stocké sur le site Heroku, mais nous aurions très bien pu utiliser Microsoft Azure pour Host le tout mais cela aurait été un peu Overkill.
+
+
